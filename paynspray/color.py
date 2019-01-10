@@ -93,7 +93,9 @@ class UiColor(object):
 
     def reset_color(self):
         if not self.supports_color:
-            self.print(self.colorize('clear'))
+            return
+            
+        self.print(self.colorize('clear'))
 
     def do_colorize(self, *args):
         try:
