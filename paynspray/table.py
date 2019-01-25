@@ -1,4 +1,9 @@
-import copy, csv, ipaddress, itertools, os, re
+import copy, csv, ipaddress, os, re
+# Python 2/3 switch
+try:
+    from itertools import izip_longest
+except ImportError:
+    from itertools import zip_longest as izip_longest
 
 class Table(object):
     """Class used to pretty-print text in a tabular format"""
@@ -220,7 +225,7 @@ class Table(object):
                 rows.append(row)
             
             tbl = self.__class__(Columns=cols)
-            groups = list(itertools.izip_longest(*[iter(rows)] * len(cols)))
+            groups = list(izip_longest(*[iter(rows)] * len(cols)))
             for r in groups:
                 tbl.add_row(list(r))
                 
