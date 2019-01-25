@@ -219,13 +219,13 @@ class Table(object):
                 cols.append(row.pop(0))
                 rows.append(row)
             
-            tbl = Table({'Columns':cols})
+            tbl = self.__class__(Columns=cols)
             groups = list(itertools.izip_longest(*[iter(rows)] * len(cols)))
             for r in groups:
                 tbl.add_row(list(r))
                 
         else:
-            tbl = Table({'Columns':csvobj.pop(0)})
+            tbl = self.__class__(Columns=csvobj.pop(0))
             while len(csvobj) > 0:
                 tbl.add_row(csvobj.pop(0))
                 
@@ -353,7 +353,7 @@ class Table(object):
         if type(col_names) == str:
             col_names = [col_names]
 
-        tbl = self.__class__({'Indent':self.indent,'Header':self.header,'Columns':col_names})
+        tbl = self.__class__(Indent=self.indent,Header=self.header,Columns=col_names})
 
         indices = []
 
