@@ -1,64 +1,81 @@
 import copy, csv, ipaddress, itertools, os, re
 
 class Table(object):
-    """Class used to print text in tabular format"""
-    def __init__(self, opts = {}):
-        if 'Header' in opts:
-            self.header = opts['Header']
+    """Class used to pretty-print text in a tabular format"""
+    def __init__(self, **kwargs):
+        """
+        Initializes a text table instance using provided arguments.
+        
+        Args:
+            Header (str): The text to display above the table.  Default: None (no header)
+            HeaderIndent (int): The number of spaces to indent the header.  Default: 0
+            Columns (list): The list of columns to use in the table.
+            Rows (list): The list of rows to use in the table.
+            Width (int): The maximum character width of the table.  Default: 80
+            Indent (int): The number of spaces to indent the table.  Default: 0
+            CellPad (int): The number of spaces between each horizontal cell.  Default: 2
+            Prefix (str): The text to display before the table.
+            Postfix (str): The text to display after the table.
+            SearchTerm (str): The regular expression used to filter rows.
+            SortIndex (int): The column index used to sort the table.  -1 disables sorting.  Default: 0
+            SortOrder (str): The direction in which to sort the table.  Default: 'forward'
+        """
+        if 'Header' in kwargs:
+            self.header = kwargs['Header']
         else:
             self.header = None
             
-        if 'HeaderIndent' in opts:
-            self.headeri = opts['HeaderIndent']
+        if 'HeaderIndent' in kwargs:
+            self.headeri = kwargs['HeaderIndent']
         else:
             self.headeri = 0
         
-        if 'Columns' in opts:
-            self.columns = opts['Columns']
+        if 'Columns' in kwargs:
+            self.columns = kwargs['Columns']
         else:
             self.columns = []
             
         self.rows = []
         
-        if 'Width' in opts:
-            self.width = opts['Width']
+        if 'Width' in kwargs:
+            self.width = kwargs['Width']
         else:
             self.width = 80
             
-        if 'Indent' in opts:
-            self.indent = opts['Indent']
+        if 'Indent' in kwargs:
+            self.indent = kwargs['Indent']
         else:
             self.indent = 0
             
-        if 'Cellpad' in opts:
-            self.cellpad = opts['Cellpad']
+        if 'CellPad' in kwargs:
+            self.cellpad = kwargs['CellPad']
         else:
             self.cellpad = 2
             
-        if 'Prefix' in opts:
-            self.prefix = opts['Prefix']
+        if 'Prefix' in kwargs:
+            self.prefix = kwargs['Prefix']
         else:
             self.prefix = ''
             
-        if 'Postfix' in opts:
-            self.postfix = opts['Postfix']
+        if 'Postfix' in kwargs:
+            self.postfix = kwargs['Postfix']
         else:
             self.postfix = ''
             
         self.colprops = []
         
-        if 'SearchTerm' in opts:
-            self.scterm = r'{}'.format(opts['SearchTerm'])
+        if 'SearchTerm' in kwargs:
+            self.scterm = r'{}'.format(kwargs['SearchTerm'])
         else:
             self.scterm = None
             
-        if 'SortIndex' in opts:
-            self.sort_index = opts['SortIndex']
+        if 'SortIndex' in kwargs:
+            self.sort_index = kwargs['SortIndex']
         else:
             self.sort_index = 0
             
-        if 'SortOrder' in opts:
-            self.sort_order = opts['SortOrder']
+        if 'SortOrder' in kwargs:
+            self.sort_order = kwargs['SortOrder']
         else:
             self.sort_order = 'forward'
             
@@ -66,15 +83,15 @@ class Table(object):
             self.colprops.append({})
             self.colprops[idx]['MaxWidth'] = len(self.columns[idx])
             
-        if 'Rows' in opts:
-            for row in opts['Rows']:
+        if 'Rows' in kwargs:
+            for row in kwargs['Rows']:
                 self.add_row(row)
                 
-        if 'ColProps' in opts:
-            for col in opts['ColProps']:
+        if 'ColProps' in kwargs:
+            for col in kwargs['ColProps']:
                 try:
                     idx = self.columns.index(col)
-                    self.colprops[idx].update(opts['ColProps'][col])
+                    self.colprops[idx].update(kwargs['ColProps'][col])
                 except ValueError:
                     pass
                 
@@ -129,7 +146,7 @@ class Table(object):
         if index == -1:
             return
 
-        if self.rows is None:
+        if self.rows is None or len(self.rows) == 0:
             return
 
         def sort_block(a, b):
