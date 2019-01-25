@@ -353,7 +353,7 @@ class Table(object):
         if type(col_names) == str:
             col_names = [col_names]
 
-        tbl = self.__class__(Indent=self.indent,Header=self.header,Columns=col_names})
+        tbl = self.__class__(Indent=self.indent,Header=self.header,Columns=col_names)
 
         indices = []
 
