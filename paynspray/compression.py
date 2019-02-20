@@ -1,4 +1,8 @@
-import re, StringIO
+import re
+try:
+    import StringIO
+except ImportError:
+    import io as StringIO
 
 try:
     import zlib
